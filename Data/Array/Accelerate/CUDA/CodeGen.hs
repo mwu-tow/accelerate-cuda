@@ -480,7 +480,7 @@ codegenOpenExp dev aenv = cvtE
           (b,r) <- clean $ single "primApp" <$> cvtE e env
           if null b
              then return r
-             else return [cexp| ({ $items:b; $exp:r; }) |]
+             else return [cexp| [&]{ $items:b; return $exp:r; }() |]
 
         -- TLM: This is a bit ugly. Consider making all primitive functions from
         --      Arithmetic.hs evaluate in the Gen monad.
@@ -838,4 +838,3 @@ ccastTup ty = fst . travTup ty
           (rs, xs'') = travTup r xs'
       in (ls ++ rs, xs'')
     travTup _ _ = $internalError "ccastTup" "not enough expressions to match type"
-
